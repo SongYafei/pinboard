@@ -1,0 +1,211 @@
+.settings {
+  position: absolute;
+  inset: 36px 0 0 0;
+  /* 弹层背景：用接近不透明的实色，避免和底层 UI 视觉重叠
+   * 同时保留 backdrop-filter，让边角和底部 footer 部分仍能透出 mica/桌面 */
+  background: var(--overlay-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn var(--dur-normal) var(--ease-out);
+}
+
+.settings__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 12px;
+  font-weight: 600;
+  font-size: var(--fs-sub);
+  border-bottom: 1px solid var(--divider);
+}
+
+.settings__close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-secondary);
+  border-radius: var(--radius-sm);
+}
+.settings__close:hover {
+  background: var(--layer-pressed);
+  color: var(--fg);
+}
+
+.settings__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.settings__group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+}
+
+.settings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.settings__label-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings__label {
+  font-size: var(--fs-body);
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.settings__hint {
+  font-size: var(--fs-caption);
+  color: var(--fg-tertiary);
+}
+
+.settings__kbd {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--control-bg);
+  border: 1px solid var(--control-border);
+  color: var(--fg-secondary);
+}
+
+.settings__number {
+  width: 64px;
+  height: 28px;
+  padding: 0 8px;
+  font-size: var(--fs-body);
+  color: var(--fg);
+  background: var(--control-bg);
+  border: 1px solid var(--control-border);
+  border-bottom-color: var(--control-border-bottom);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  user-select: text;
+}
+.settings__number:focus {
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0;
+}
+
+/* 主题选择器 */
+.settings__theme {
+  display: flex;
+  gap: 6px;
+}
+
+.settings__theme-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px;
+  font-size: var(--fs-caption);
+  color: var(--fg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  transition: all var(--dur-fast);
+}
+.settings__theme-btn:hover {
+  background: var(--control-hover);
+  color: var(--fg);
+}
+.settings__theme-btn.is-active {
+  border-color: var(--accent);
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+}
+
+/* Range */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 120px;
+  height: 4px;
+  background: var(--control-border-bottom);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg-solid);
+  box-shadow: var(--shadow-2);
+}
+
+/* Toggle switch - Fluent 风格 */
+.toggle {
+  display: inline-flex;
+  position: relative;
+  cursor: pointer;
+}
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.toggle__track {
+  width: 40px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--control-bg);
+  border: 1px solid var(--control-border-bottom);
+  display: flex;
+  align-items: center;
+  padding: 0 3px;
+  transition: background var(--dur-fast);
+}
+.toggle__thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--fg-secondary);
+  transition: transform var(--dur-fast) var(--ease-out),
+    background var(--dur-fast);
+}
+.toggle input:checked + .toggle__track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.toggle input:checked + .toggle__track .toggle__thumb {
+  transform: translateX(20px);
+  background: var(--accent-fg);
+}
+
+.settings__about {
+  text-align: center;
+  padding-top: 8px;
+  font-size: var(--fs-caption);
+  color: var(--fg-tertiary);
+}
+.settings__about-sub {
+  margin-top: 2px;
+  font-size: 11px;
+  opacity: 0.7;
+}

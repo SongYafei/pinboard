@@ -1,0 +1,141 @@
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 8px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--divider);
+}
+
+/* 搜索框 - Fluent 风格下划线 */
+.toolbar__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  background: var(--control-bg);
+  border: 1px solid var(--control-border);
+  border-bottom-color: var(--control-border-bottom);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.toolbar__search:focus-within {
+  border-color: var(--control-border);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0;
+}
+
+.toolbar__search input {
+  flex: 1;
+  height: 100%;
+  font-size: var(--fs-body);
+  user-select: text;
+}
+
+.toolbar__search-icon {
+  color: var(--fg-tertiary);
+  flex-shrink: 0;
+}
+
+.toolbar__search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--fg-tertiary);
+  border-radius: 50%;
+}
+
+.toolbar__search-clear:hover {
+  background: var(--layer-pressed);
+  color: var(--fg);
+}
+
+/* Tabs */
+.toolbar__tabs {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--control-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--control-border);
+}
+
+.toolbar__tab {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 26px;
+  padding: 0 4px;
+  font-size: var(--fs-caption);
+  color: var(--fg-secondary);
+  border-radius: calc(var(--radius-md) - 3px);
+  transition: background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+  position: relative;
+}
+
+.toolbar__tab span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolbar__tab:hover {
+  color: var(--fg);
+}
+
+.toolbar__tab.is-active {
+  background: var(--layer-hover);
+  color: var(--fg);
+  box-shadow: var(--shadow-2);
+}
+
+.toolbar__tab-badge {
+  min-width: 16px;
+  height: 14px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 7px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* 标签 */
+.toolbar__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.toolbar__tag {
+  height: 22px;
+  padding: 0 8px;
+  font-size: var(--fs-caption);
+  color: var(--fg-secondary);
+  border-radius: 11px;
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.toolbar__tag:hover {
+  color: var(--fg);
+  background: var(--control-hover);
+}
+
+.toolbar__tag.is-active {
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  border-color: transparent;
+}

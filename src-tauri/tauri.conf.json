@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0.0",
+  "productName": "PinBoard",
+  "version": "0.1.0",
+  "identifier": "com.pinboard.app",
+  "build": {
+    "beforeDevCommand": "node node_modules/vite/bin/vite.js",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "node node_modules/vite/bin/vite.js build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "PinBoard",
+        "width": 360,
+        "height": 560,
+        "minWidth": 280,
+        "minHeight": 360,
+        "resizable": true,
+        "maximizable": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "center": false,
+        "x": 1400,
+        "y": 100,
+        "shadow": true,
+        "visible": true,
+        "windowEffects": {
+          "effects": ["acrylic", "mica"],
+          "state": "active"
+        }
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": {
+          "allow": ["**"],
+          "deny": []
+        }
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "wix": { "language": ["zh-CN"] },
+      "nsis": { "languages": ["SimpChinese", "English"] }
+    }
+  },
+  "plugins": {
+    "sql": {
+      "preload": ["sqlite:pinboard.db"]
+    }
+  }
+}

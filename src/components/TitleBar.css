@@ -1,0 +1,60 @@
+.titlebar {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 0 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--divider);
+  position: relative;
+}
+
+.titlebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sub);
+  font-weight: 600;
+  flex: 1;
+  height: 100%;
+}
+
+.titlebar__logo {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.titlebar__title {
+  letter-spacing: 0.2px;
+}
+
+.titlebar__actions {
+  display: flex;
+  gap: 2px;
+}
+
+.titlebar__btn {
+  width: 30px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-secondary);
+  border-radius: var(--radius-sm);
+  transition: background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.titlebar__btn:hover {
+  background: var(--layer-pressed);
+  color: var(--fg);
+}
+
+.titlebar__btn--close:hover {
+  background: var(--danger);
+  color: #fff;
+}

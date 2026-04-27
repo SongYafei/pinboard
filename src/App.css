@@ -1,0 +1,55 @@
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* 半透明背景，让窗口的 Mica 云母效果透出来 */
+  background: var(--bg);
+  border-radius: 0;
+}
+
+.app__list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app__loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-tertiary);
+  font-size: var(--fs-body);
+}
+
+.app__footer {
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-size: 11px;
+  color: var(--fg-tertiary);
+  border-top: 1px solid var(--divider);
+}
+.app__footer-hint {
+  opacity: 0.7;
+}
+
+/* ============ 吸附边缘指示条 ============
+ * 把手组件样式已迁移到 components/EdgeHandle.css，
+ * 这里只保留"吸附时隐藏其他 UI"的规则。
+ */
+
+/* 吸附状态下，整个 app 内容隐藏（只显示把手）避免看到乱糟糟的半个 UI */
+body[data-snap-edge] .app > *:not(.edge-handle) {
+  opacity: 0;
+}
+body[data-snap-edge] .app {
+  background: transparent;
+}
+

@@ -1,0 +1,320 @@
+/* ============ EdgeHandle 吸附把手 ============
+ * 显隐由 body[data-snap-edge] 控制（见 App.css）。
+ * 三种方向（left/right/top）布局不同，但共用同一组 seg（段）。
+ * 视觉风格：与窗口同款 Mica/Acrylic（半透明 + backdrop-filter 模糊），
+ *   只在贴屏内侧加一条 accent 色高光线作为视觉锚点。
+ */
+
+.edge-handle {
+  position: fixed;
+  z-index: 9999;
+  display: none;
+  /* mica 风：低不透明 + 强模糊 + 提色 */
+  background: var(--peek-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  color: var(--fg);
+  /* 内嵌一圈微高光，立体感 */
+  box-shadow:
+    inset 0 0 0 1px var(--peek-stroke),
+    0 0 12px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  user-select: none;
+  /* 整条不拦截鼠标，避免打断 useAutoHide 的 near 轮询；
+     需要交互的 .edge-btn 单独开 pointer-events: auto */
+  pointer-events: none;
+  /* 默认柔和 idle 呼吸 */
+  animation: edgePulse 3.2s ease-in-out infinite;
+  /* 自定义渐变变量给伪元素用：accent 强调线 */
+  --peek-accent-line: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 70%, transparent) 25%,
+    color-mix(in srgb, var(--accent) 90%, transparent) 50%,
+    color-mix(in srgb, var(--accent) 70%, transparent) 75%,
+    transparent 100%
+  );
+  --peek-accent-line-h: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 70%, transparent) 25%,
+    color-mix(in srgb, var(--accent) 90%, transparent) 50%,
+    color-mix(in srgb, var(--accent) 70%, transparent) 75%,
+    transparent 100%
+  );
+}
+
+/* —— 贴屏内侧的 accent 高光线（视觉锚点，告诉用户"这里能拽出来"） —— */
+.edge-handle::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  background: var(--peek-accent-line);
+  opacity: 0.85;
+  animation: peekAccentBreath 2.4s ease-in-out infinite;
+}
+
+/* 有新事件时整条更亮 + 高光线脉动更快 */
+.edge-handle[data-alert="alert"] {
+  animation: edgePulseAlert 1.6s ease-in-out infinite;
+}
+.edge-handle[data-alert="alert"]::after {
+  animation: peekAccentBreath 1.2s ease-in-out infinite;
+  opacity: 1;
+}
+
+@keyframes edgePulse {
+  0%, 100% { opacity: 0.95; }
+  50% { opacity: 1; }
+}
+@keyframes edgePulseAlert {
+  0%, 100% {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 0 1px var(--peek-stroke),
+      0 0 14px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  50% {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 0 1px var(--peek-stroke),
+      0 0 22px color-mix(in srgb, var(--accent) 85%, transparent);
+  }
+}
+@keyframes peekAccentBreath {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* —— 单个段的通用样式 —— */
+.edge-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* 可交互段：启用鼠标事件，带 hover 效果 */
+.edge-btn {
+  position: relative;
+  pointer-events: auto;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  transition: background 120ms ease, transform 120ms ease;
+}
+.edge-btn:hover {
+  /* mica 风格上用 accent 微透明做 hover 高亮 */
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.edge-btn:active {
+  transform: scale(0.92);
+}
+
+/* 分隔：每段之间淡淡的高光线 */
+.edge-seg + .edge-seg {
+  position: relative;
+}
+
+/* —— 数字徽章 —— */
+.edge-num {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+
+/* 小红点/数字徽章（叠在图标右上） */
+.edge-badge {
+  position: absolute;
+  top: 1px;
+  right: 0px;
+  min-width: 12px;
+  height: 12px;
+  padding: 0 2px;
+  border-radius: 6px;
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 12px;
+  text-align: center;
+  /* 用 peek 背景色描边，营造"嵌入"感（替代之前 accent 描边） */
+  box-shadow: 0 0 0 1.5px var(--peek-stroke-strong), 0 0 4px rgba(0, 0, 0, 0.25);
+}
+
+/* 剪贴板 pending 的脉动小点 */
+.edge-pulse-dot {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #44d864;
+  box-shadow: 0 0 0 1.5px var(--peek-stroke-strong), 0 0 8px #44d864;
+  animation: pulseDot 1.2s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.7); opacity: 0.6; }
+}
+
+/* 品牌文字兜底填充 */
+.edge-label {
+  flex: 1 1 auto;
+  overflow: hidden;
+  opacity: 0.8;
+}
+.edge-label-text {
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  white-space: nowrap;
+}
+
+/* ============ 方向 1：右侧吸附（窗口大部分在右屏外，露左边 22px）
+ *  把手贴窗口最左侧竖向排列 ============ */
+body[data-snap-edge="right"] .edge-handle {
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 22px;
+  padding: 8px 0;
+  gap: 6px;
+}
+/* 右吸附：accent 高光线贴在 peek 条最右侧（屏内侧 = 窗口主体那侧） */
+body[data-snap-edge="right"] .edge-handle::after {
+  right: 0;
+  top: 6%;
+  bottom: 6%;
+  width: 2px;
+}
+body[data-snap-edge="right"] .edge-seg {
+  width: 100%;
+  height: 22px;
+}
+body[data-snap-edge="right"] .edge-brand,
+body[data-snap-edge="right"] .edge-count {
+  height: 20px;
+}
+body[data-snap-edge="right"] .edge-btn {
+  height: 24px;
+  border-radius: 4px;
+}
+body[data-snap-edge="right"] .edge-label {
+  writing-mode: vertical-rl;
+  align-self: stretch;
+  justify-content: center;
+}
+body[data-snap-edge="right"] .edge-seg + .edge-seg::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 4px;
+  right: 4px;
+  height: 1px;
+  background: var(--peek-divider);
+}
+
+/* ============ 方向 2：左侧吸附（露右边 22px） ============ */
+body[data-snap-edge="left"] .edge-handle {
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 22px;
+  padding: 8px 0;
+  gap: 6px;
+}
+/* 左吸附：accent 高光线贴在 peek 条最左侧（屏内侧） */
+body[data-snap-edge="left"] .edge-handle::after {
+  left: 0;
+  top: 6%;
+  bottom: 6%;
+  width: 2px;
+}
+body[data-snap-edge="left"] .edge-seg {
+  width: 100%;
+  height: 22px;
+}
+body[data-snap-edge="left"] .edge-brand,
+body[data-snap-edge="left"] .edge-count {
+  height: 20px;
+}
+body[data-snap-edge="left"] .edge-btn {
+  height: 24px;
+  border-radius: 4px;
+}
+body[data-snap-edge="left"] .edge-label {
+  writing-mode: vertical-rl;
+  align-self: stretch;
+  justify-content: center;
+}
+body[data-snap-edge="left"] .edge-seg + .edge-seg::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 4px;
+  right: 4px;
+  height: 1px;
+  background: var(--peek-divider);
+}
+/* 左侧：徽章贴在图标左上（因为露出的是右边） */
+body[data-snap-edge="left"] .edge-badge,
+body[data-snap-edge="left"] .edge-pulse-dot {
+  right: auto;
+  left: 0;
+}
+
+/* ============ 方向 3：顶部吸附（露底边 22px） ============ */
+body[data-snap-edge="top"] .edge-handle {
+  display: flex;
+  flex-direction: row;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22px;
+  padding: 0 10px;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+/* 顶部吸附：accent 高光线贴在 peek 条最顶部（屏内侧）*/
+body[data-snap-edge="top"] .edge-handle::after {
+  top: 0;
+  left: 6%;
+  right: 6%;
+  height: 2px;
+  /* 顶部为水平方向，需要使用横向渐变 */
+  background: var(--peek-accent-line-h);
+}
+body[data-snap-edge="top"] .edge-seg {
+  height: 22px;
+}
+body[data-snap-edge="top"] .edge-brand,
+body[data-snap-edge="top"] .edge-count {
+  width: 22px;
+}
+body[data-snap-edge="top"] .edge-btn {
+  width: 28px;
+  border-radius: 4px;
+}
+body[data-snap-edge="top"] .edge-label {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+body[data-snap-edge="top"] .edge-seg + .edge-seg::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: -4px;
+  width: 1px;
+  background: var(--peek-divider);
+}

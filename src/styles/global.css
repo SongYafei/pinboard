@@ -1,0 +1,118 @@
+@import "./tokens.css";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system,
+    "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: var(--fs-body);
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  cursor: default;
+}
+
+/* Mica 效果下背景需要透明
+ * 关键：html / body / #root 全部透明，由 .app 控制实际可见层的透明度。
+ * 注意：webview 本身在 transparent:true 下不会自动透明给 mica，
+ * 必须保证 React 渲染树最外层不画不透明背景。
+ */
+html,
+body,
+#root {
+  background: transparent !important;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background var(--dur-fast);
+}
+:hover::-webkit-scrollbar-thumb,
+*:hover > ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+}
+
+/* 按钮基础样式 */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+input::placeholder {
+  color: var(--fg-tertiary);
+}
+
+/* 输入框默认聚焦环 */
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* 文字选中 */
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* 通用动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

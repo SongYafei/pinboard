@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!--
+    PinBoard Tray Icon - 针对小尺寸（16x16 / 24x24 / 32x32）优化
+    设计原则：
+    - 单一主体（图钉），无卡片背景
+    - 极粗的轮廓，保证缩放后仍有形状辨识度
+    - 高对比度纯色填充，不用渐变（小尺寸下渐变会糊）
+    - 留出充足的 padding（约 100px）防止边缘被裁
+  -->
+  <g transform="translate(512 512) rotate(-15)">
+    <!-- 外圈深色描边，让小尺寸下边缘更分明 -->
+    <!-- 针身（粗梯形 + 尖针） -->
+    <path d="
+        M -70 -120
+        L 70 -120
+        L 55 220
+        L 0 360
+        L -55 220
+        Z"
+      fill="#0F4C8A"
+      stroke="#0A3463"
+      stroke-width="20"
+      stroke-linejoin="round" />
+
+    <!-- 针帽（实心蓝圆） -->
+    <circle cx="0" cy="-200" r="240"
+      fill="#1E88E5"
+      stroke="#0A3463"
+      stroke-width="20" />
+
+    <!-- 针帽顶部高光（白色） -->
+    <ellipse cx="-70" cy="-280" rx="80" ry="50"
+      fill="#FFFFFF"
+      opacity="0.85" />
+  </g>
+</svg>

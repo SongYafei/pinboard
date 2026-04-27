@@ -1,0 +1,107 @@
+.hover-preview {
+  position: fixed;
+  z-index: 1500;
+  background: var(--bg-solid);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-16);
+  padding: 10px 12px;
+  font-size: var(--fs-caption);
+  color: var(--fg);
+  pointer-events: none;
+  animation: hoverPreviewIn 140ms var(--ease-out);
+  overflow: hidden;
+}
+
+.hover-preview--interactive {
+  pointer-events: auto;
+}
+
+@keyframes hoverPreviewIn {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.hover-preview--left {
+  animation-name: hoverPreviewInLeft;
+}
+@keyframes hoverPreviewInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.hover-preview--bottom,
+.hover-preview--top {
+  animation-name: hoverPreviewInY;
+}
+@keyframes hoverPreviewInY {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 文字预览 */
+.hover-preview__text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Consolas", "Cascadia Code", "Segoe UI Variable", monospace;
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  max-height: 420px;
+  overflow-y: auto;
+  user-select: text;
+}
+
+.hover-preview__text::-webkit-scrollbar {
+  width: 6px;
+}
+.hover-preview__text::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 3px;
+}
+
+/* 图片预览 */
+.hover-preview__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--layer-pressed);
+}
+.hover-preview__image img {
+  display: block;
+  max-width: 400px;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.hover-preview__meta {
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--fg-tertiary);
+  background: var(--bg-solid);
+  border-top: 1px solid var(--divider);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hover-preview--image-wrap {
+  padding: 0;
+  overflow: hidden;
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PinBoard Icon 预览 v2（透明底）</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI Variable", "Segoe UI", system-ui, "Microsoft YaHei", sans-serif;
+      background: #1a1a1a;
+      color: #f5f5f5;
+      min-height: 100vh;
+      padding: 40px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
+    .sub { color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 36px; }
+    h2 {
+      font-size: 13px; font-weight: 700; margin: 36px 0 14px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-end; }
+    .item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .item .label { font-size: 10px; color: rgba(255,255,255,0.5); font-variant-numeric: tabular-nums; }
+    .bg-panel {
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    /* 各种背景模拟 */
+    .bg-white { background: #ffffff; }
+    .bg-light { background: #f3f3f3; }
+    .bg-gray { background: #808080; }
+    .bg-dark { background: #2a2a2a; }
+    .bg-black { background: #000000; }
+    .bg-taskbar { background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(10px); }
+    .bg-blue { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+    .bg-sunset { background: linear-gradient(135deg, #ff6b6b, #feca57); }
+    .bg-wallpaper-1 {
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='%234a90e2'/><circle cx='50' cy='50' r='30' fill='%23ffe14d' opacity='0.5'/><polygon points='0,120 50,80 100,110 150,70 200,100 200,200 0,200' fill='%23152234'/></svg>") center/cover;
+    }
+    .bg-wallpaper-2 {
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='%23f5f5dc'/><circle cx='100' cy='100' r='60' fill='%23c9b179' opacity='0.4'/><rect x='20' y='140' width='160' height='40' fill='%238c7a5a' opacity='0.5'/></svg>") center/cover;
+    }
+    .scene-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .scene { display: flex; flex-direction: column; gap: 6px; }
+    .scene .title {
+      font-size: 11px; color: rgba(255,255,255,0.45);
+    }
+    /* 任务栏 */
+    .taskbar {
+      display: flex; gap: 8px; padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.7); border-radius: 8px;
+      justify-content: center; backdrop-filter: blur(20px);
+    }
+    .taskbar img { border-radius: 6px; }
+    .taskbar .slot {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.1); border-radius: 6px; font-size: 20px;
+    }
+    /* 开始菜单 */
+    .startmenu {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      padding: 20px; background: rgba(40, 40, 40, 0.92); border-radius: 12px;
+      backdrop-filter: blur(20px);
+    }
+    .startmenu .app {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: white; font-size: 11px;
+    }
+    .startmenu .app img { border-radius: 10px; }
+    .startmenu .app .placeholder {
+      width: 64px; height: 64px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>PinBoard Icon · v2（去蓝色底）</h1>
+    <div class="sub">透明底版本 · 关注：在深色背景下图钉/卡片边缘还看得清吗？</div>
+
+    <h2>常用尺寸（深色背景）</h2>
+    <div class="row">
+      <div class="item"><img src="icon.svg" width="256" height="256" /><span class="label">256</span></div>
+      <div class="item"><img src="icon.svg" width="128" height="128" /><span class="label">128</span></div>
+      <div class="item"><img src="icon.svg" width="64" height="64" /><span class="label">64</span></div>
+      <div class="item"><img src="icon.svg" width="48" height="48" /><span class="label">48</span></div>
+      <div class="item"><img src="icon.svg" width="32" height="32" /><span class="label">32</span></div>
+      <div class="item"><img src="icon.svg" width="16" height="16" /><span class="label">16</span></div>
+    </div>
+
+    <h2>多种背景下识别性测试</h2>
+    <div class="scene-grid">
+      <div class="scene"><div class="title">纯白</div><div class="bg-panel bg-white"><img src="icon.svg" width="128" /></div></div>
+      <div class="scene"><div class="title">浅灰（Win11 桌面）</div><div class="bg-panel bg-light"><img src="icon.svg" width="128" /></div></div>
+      <div class="scene"><div class="title">中灰</div><div class="bg-panel bg-gray"><img src="icon.svg" width="128" /></div></div>
+      <div class="scene"><div class="title">深色</div><div class="bg-panel bg-dark"><img src="icon.svg" width="128" /></div></div>
+      <div class="scene"><div class="title">黑色</div><div class="bg-panel bg-black"><img src="icon.svg" width="128" /></div></div>
+      <div class="scene"><div class="title">蓝紫渐变</div><div class="bg-panel bg-blue"><img src="icon.svg" width="128" /></div></div>
+      <div class="scene"><div class="title">日落渐变</div><div class="bg-panel bg-sunset"><img src="icon.svg" width="128" /></div></div>
+      <div class="scene"><div class="title">风景壁纸</div><div class="bg-panel bg-wallpaper-1"><img src="icon.svg" width="128" /></div></div>
+    </div>
+
+    <h2>实际使用场景</h2>
+    <div class="scene-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="scene">
+        <div class="title">Win11 任务栏（最常见）</div>
+        <div class="taskbar">
+          <div class="slot">🔍</div>
+          <div class="slot">📁</div>
+          <div class="slot">💬</div>
+          <img src="icon.svg" width="40" height="40" />
+          <div class="slot">🌐</div>
+          <div class="slot">📧</div>
+        </div>
+      </div>
+
+      <div class="scene">
+        <div class="title">开始菜单（对比其他应用）</div>
+        <div class="startmenu">
+          <div class="app"><div class="placeholder" style="background:linear-gradient(135deg,#0078D4,#00A2FF);">📧</div><span>邮件</span></div>
+          <div class="app"><img src="icon.svg" width="64" height="64" /><span>PinBoard</span></div>
+          <div class="app"><div class="placeholder" style="background:#FF6B6B;">📝</div><span>便签</span></div>
+          <div class="app"><div class="placeholder" style="background:#4CAF50;">📁</div><span>文件</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>小尺寸可读性（放大后仔细看）</h2>
+    <div class="row">
+      <div class="item"><div class="bg-panel bg-dark" style="padding:8px"><img src="icon.svg" width="16" height="16" /></div><span class="label">16px · 暗</span></div>
+      <div class="item"><div class="bg-panel bg-white" style="padding:8px"><img src="icon.svg" width="16" height="16" /></div><span class="label">16px · 亮</span></div>
+      <div class="item"><div class="bg-panel bg-dark" style="padding:8px"><img src="icon.svg" width="32" height="32" /></div><span class="label">32px · 暗</span></div>
+      <div class="item"><div class="bg-panel bg-white" style="padding:8px"><img src="icon.svg" width="32" height="32" /></div><span class="label">32px · 亮</span></div>
+    </div>
+  </div>
+</body>
+</html>

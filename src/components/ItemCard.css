@@ -1,0 +1,238 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  margin: 0 8px 4px;
+  border-radius: var(--radius-md);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  /* 禁止鼠标划选（卡片是点击/双击交互，不需要选中文本） */
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+  animation: fadeIn var(--dur-normal) var(--ease-out);
+}
+
+.card:hover {
+  background: var(--card-hover);
+  box-shadow: var(--shadow-2);
+}
+
+.card:active {
+  transform: scale(0.99);
+}
+
+.card.is-pinned {
+  border-left: 3px solid var(--accent);
+  padding-left: 9px;
+}
+
+.card.is-missing {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.card.is-missing:hover {
+  background: var(--card);
+}
+
+/* 下载来源 - 左侧绿色细条 */
+.card--download:not(.is-pinned) {
+  border-left: 3px solid var(--success);
+  padding-left: 9px;
+}
+/* 置顶优先级高于 download，颜色用 accent */
+.card--download.is-pinned {
+  border-left-color: var(--accent);
+}
+:root[data-theme="dark"] .card--download:not(.is-pinned) {
+  border-left-color: #6ccb5f;
+}
+
+.card__icon-badge {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--success);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-solid);
+  box-shadow: var(--shadow-2);
+}
+:root[data-theme="dark"] .card__icon-badge {
+  background: #6ccb5f;
+  color: #000;
+}
+
+.card__time {
+  font-size: 10px;
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+  padding: 0 2px;
+}
+
+.card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.card__icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--accent);
+  background: var(--tag-bg);
+  border-radius: var(--radius-sm);
+}
+
+.card--text .card__icon {
+  color: var(--success);
+  background: rgba(16, 124, 16, 0.12);
+}
+:root[data-theme="dark"] .card--text .card__icon {
+  color: #6ccb5f;
+  background: rgba(108, 203, 95, 0.18);
+}
+
+.card--image .card__icon {
+  color: var(--warning);
+  background: rgba(202, 80, 16, 0.14);
+}
+:root[data-theme="dark"] .card--image .card__icon {
+  color: #ffb74d;
+  background: rgba(255, 183, 77, 0.16);
+}
+
+.card__title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-body);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__text-preview {
+  font-family: "Consolas", "Cascadia Code", monospace;
+  font-size: var(--fs-caption);
+  color: var(--fg);
+}
+
+.card__head-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.card__pin-ind {
+  color: var(--accent);
+}
+
+.card__missing-ind {
+  color: var(--danger);
+}
+
+.card__menu-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-tertiary);
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity var(--dur-fast), background var(--dur-fast);
+}
+
+.card:hover .card__menu-btn {
+  opacity: 1;
+}
+
+.card__menu-btn:hover {
+  background: var(--layer-pressed);
+  color: var(--fg);
+}
+
+.card__sub {
+  font-size: var(--fs-caption);
+  color: var(--fg-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 32px;
+}
+
+.card__thumb {
+  margin-top: 2px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  max-height: 120px;
+  display: flex;
+  justify-content: center;
+  background: var(--layer-pressed);
+}
+
+.card__thumb img {
+  max-width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  display: block;
+}
+
+.card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-left: 32px;
+}
+
+.card__tag {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  cursor: pointer;
+  transition: opacity var(--dur-fast);
+}
+.card__tag:hover {
+  opacity: 0.7;
+}
+
+.card__copied {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: var(--fs-caption);
+  color: var(--accent-fg);
+  background: var(--success);
+  border-radius: 10px;
+  box-shadow: var(--shadow-8);
+  animation: fadeIn var(--dur-fast) var(--ease-out);
+  pointer-events: none;
+}
+:root[data-theme="dark"] .card__copied {
+  background: #6ccb5f;
+  color: #000;
+}
