@@ -28,7 +28,7 @@
         "x": 1400,
         "y": 100,
         "shadow": true,
-        "visible": false,
+        "visible": true,
         "windowEffects": {
           "effects": ["acrylic", "mica"],
           "state": "active"
