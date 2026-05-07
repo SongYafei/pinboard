@@ -105,6 +105,13 @@ export default function App() {
     Promise.all([loadSettings(), loadItems()]);
   }, [loadItems, loadSettings]);
 
+  // 初始化完成后显示窗口（tauri.conf.json 中 visible: false）
+  useEffect(() => {
+    if (settingsLoaded && loaded) {
+      getCurrentWindow().then((win) => win.show()).catch(console.warn);
+    }
+  }, [settingsLoaded, loaded]);
+
   // 窗口透明度
   useEffect(() => {
     if (!settingsLoaded) return;
