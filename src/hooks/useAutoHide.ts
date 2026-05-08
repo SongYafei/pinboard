@@ -71,6 +71,8 @@ export function useAutoHide({ pausedRef, paused }: Options): AutoHideHandle {
   const savedPosRef = useRef<{ x: number; y: number } | null>(null);
   /** 鼠标是否在文档内（DOM 范围） */
   const mouseInsideRef = useRef(false);
+  /** 当前 idle 是否由贴边态展开而来（true 时失焦应立即重贴边，不走延时） */
+  const cameFromSnapRef = useRef(false);
   /** 是否已经做过首次 effect 初始化（HMR 重置保护） */
   const initedRef = useRef(false);
 
@@ -166,6 +168,8 @@ export function useAutoHide({ pausedRef, paused }: Options): AutoHideHandle {
     console.log("[autoHide] show() start");
     stopPolling();
     stateRef.current = "idle";
+    // 标记：当前 idle 是从贴边态展开而来 → 失焦应立即重贴边
+    cameFromSnapRef.current = true;
     // 移除吸附指示
     document.body.removeAttribute("data-snap-edge");
     // 先 setFocus：让 Tauri/浏览器的 focus 状态立刻变为 true，
@@ -290,6 +294,8 @@ export function useAutoHide({ pausedRef, paused }: Options): AutoHideHandle {
       console.log("[autoHide] animating from", x, y, "to", tx, ty);
 
       stateRef.current = "hidden";
+      // 清空 cameFromSnap 标记（下次 show 时再重新置位）
+      cameFromSnapRef.current = false;
       // 把吸附方向写到 body data 属性上，供 CSS 控制指示条显示
       document.body.setAttribute("data-snap-edge", edge);
       await animateTo(tx, ty);
@@ -372,6 +378,17 @@ export function useAutoHide({ pausedRef, paused }: Options): AutoHideHandle {
         clearTimer();
         if (stateRef.current === "hidden") show();
       } else {
+        // 如果当前 idle 是从贴边态展开的 → 失焦立即贴回，不走延时
+        if (
+          cameFromSnapRef.current &&
+          stateRef.current === "idle" &&
+          !animatingRef.current
+        ) {
+          console.log("[autoHide] blur: cameFromSnap -> immediate hide");
+          clearTimer();
+          hide(true);
+          return;
+        }
         scheduleHide();
       }
     };
@@ -437,7 +454,7 @@ export function useAutoHide({ pausedRef, paused }: Options): AutoHideHandle {
       clearTimer();
       stopPolling();
     };
-  }, [clearTimer, scheduleHide, settingsLoaded, show, stopPolling, win]);
+  }, [clearTimer, hide, scheduleHide, settingsLoaded, show, stopPolling, win]);
 
   // ===== enabled 被关掉：清 timer + 若在吸附则还原 =====
   useEffect(() => {

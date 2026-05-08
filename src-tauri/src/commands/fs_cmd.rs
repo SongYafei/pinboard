@@ -14,9 +14,13 @@ pub fn open_path(path: String) -> Result<(), String> {
     {
         // 用 cmd /c start "" "<path>" 触发 Win32 ShellExecute，
         // 第一个空字符串是 start 命令的窗口标题占位，必须保留，否则带空格/引号的路径会被解析错。
+        // CREATE_NO_WINDOW (0x08000000) 防止 cmd 闪现黑色控制台窗口。
+        use std::os::windows::process::CommandExt;
         use std::process::Command;
+        const CREATE_NO_WINDOW: u32 = 0x08000000;
         Command::new("cmd")
             .args(["/C", "start", "", &path])
+            .creation_flags(CREATE_NO_WINDOW)
             .spawn()
             .map_err(|e| e.to_string())?;
         return Ok(());
@@ -32,9 +36,12 @@ pub fn open_path(path: String) -> Result<(), String> {
 pub fn show_in_explorer(path: String) -> Result<(), String> {
     #[cfg(target_os = "windows")]
     {
+        use std::os::windows::process::CommandExt;
         use std::process::Command;
+        const CREATE_NO_WINDOW: u32 = 0x08000000;
         Command::new("explorer")
             .args(["/select,", &path])
+            .creation_flags(CREATE_NO_WINDOW)
             .spawn()
             .map_err(|e| e.to_string())?;
         return Ok(());
