@@ -62,7 +62,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   clipboardWatch: false,
   downloadWatch: true,
   downloadMaxKeep: 20,
-  hotkey: "CmdOrCtrl+Shift+V",
+  hotkey: "Alt+Shift+P",
   hideMissing: false,
   autoHideEnabled: true,
   autoHideDelay: 10,

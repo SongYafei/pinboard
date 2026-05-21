@@ -127,14 +127,14 @@ export function SettingsPanel({ onClose }: Props) {
             <input
               type="number"
               className="settings__number"
-              min={5}
+              min={0}
               max={200}
-              step={5}
+              step={1}
               value={s.downloadMaxKeep}
               onChange={(e) => {
                 const v = Math.max(
-                  5,
-                  Math.min(200, parseInt(e.target.value) || 20),
+                  0,
+                  Math.min(200, parseInt(e.target.value) || 0),
                 );
                 s.update({ downloadMaxKeep: v });
               }}
@@ -153,7 +153,7 @@ export function SettingsPanel({ onClose }: Props) {
         </div>
 
         <div className="settings__about">
-          <div>PinBoard v0.1.0</div>
+          <div>PinBoard v0.1.3</div>
           <div className="settings__about-sub">
             Windows 置顶钉板 · Tauri + React
           </div>

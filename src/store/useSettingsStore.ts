@@ -19,7 +19,20 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
       const raw = await db.getSetting(KEY);
       if (raw) {
         const saved = JSON.parse(raw) as Partial<AppSettings>;
+        // 迁移：旧默认快捷键 → 新默认快捷键
+        const OLD_DEFAULT = "CmdOrCtrl+Shift+V";
+        const needMigrate = saved.hotkey === OLD_DEFAULT;
+        if (needMigrate) {
+          saved.hotkey = DEFAULT_SETTINGS.hotkey;
+        }
         set({ ...DEFAULT_SETTINGS, ...saved, loaded: true });
+        // 如果 hotkey 被迁移了，把新值写回持久化
+        if (needMigrate) {
+          const { loaded: _l, load: _ld, update: _u, ...rest } = get();
+          void _l; void _ld; void _u;
+          await db.setSetting(KEY, JSON.stringify(rest));
+          console.log("[settings] migrated hotkey ->", DEFAULT_SETTINGS.hotkey);
+        }
         return;
       }
     } catch (e) {

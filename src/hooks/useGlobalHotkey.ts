@@ -24,6 +24,17 @@ export function useGlobalHotkey(): void {
           const win = getCurrentWindow();
           const visible = await win.isVisible();
           const focused = await win.isFocused();
+          // 贴边态：调用 autohide 的 show 把窗口完整展开（视为用户主动唤起）
+          const isSnapped = document.body.hasAttribute("data-snap-edge");
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const snapShow: undefined | (() => Promise<void>) = (window as any)
+            .__pinboardSnapShow;
+          if (isSnapped && snapShow) {
+            await win.show();
+            await win.setFocus();
+            await snapShow();
+            return;
+          }
           if (visible && focused) {
             await win.hide();
           } else {

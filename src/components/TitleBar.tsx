@@ -22,8 +22,16 @@ export function TitleBar({ onOpenSettings, onSnapNow }: Props) {
    * 我们在 pointerdown 时若检测到是 2 连击（detail >= 2），阻止默认行为 + 阻止冒泡，
    * Tauri native 拿不到这个事件就不会走最大化分支。
    * 再叠一层防御：若仍然被最大化，立刻 unmaximize 兜底。
+   *
+   * 同时：记录拖动开始时间戳到 window，供 useAutoHide 判断"是否处于用户拖动中"。
+   * 拖动会让 webview 短暂失焦，不能因此触发 cameFromSnap 立即贴回。
    */
   const blockDblMaximize = (e: React.PointerEvent<HTMLDivElement>) => {
+    // 只对左键处理（Tauri 拖动也是左键）
+    if (e.button === 0) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).__pinboardDragAt = Date.now();
+    }
     if (e.detail >= 2) {
       e.preventDefault();
       e.stopPropagation();
@@ -77,7 +85,7 @@ export function TitleBar({ onOpenSettings, onSnapNow }: Props) {
         <button
           className="titlebar__btn titlebar__btn--close"
           onClick={() => win.hide()}
-          title="隐藏 (Ctrl+Shift+V 呼出)"
+          title="隐藏 (Alt+Shift+P 呼出)"
           aria-label="隐藏"
         >
           <X size={14} />

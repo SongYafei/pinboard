@@ -182,6 +182,16 @@ export function useAutoHide({ pausedRef, paused }: Options): AutoHideHandle {
     console.log("[autoHide] show() done");
   }, [animateTo, stopPolling, win]);
 
+  // 把 show 挂到 window 全局，供 useGlobalHotkey 在贴边态按快捷键时调用展开
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).__pinboardSnapShow = show;
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (window as any).__pinboardSnapShow;
+    };
+  }, [show]);
+
   // ===== 吸附态下轮询鼠标位置，靠近 peek 条就还原 =====
   const startPolling = useCallback(() => {
     stopPolling();
@@ -339,6 +349,13 @@ export function useAutoHide({ pausedRef, paused }: Options): AutoHideHandle {
       console.log("[autoHide] skip: disabled");
       return;
     }
+    // 用户刚拖动过窗口 → 不调度自动贴边
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dragAt: number = (window as any).__pinboardDragAt || 0;
+    if (Date.now() - dragAt < 1000) {
+      console.log("[autoHide] skip: recent drag");
+      return;
+    }
     if (stateRef.current !== "idle") {
       console.log("[autoHide] skip: state=" + stateRef.current);
       return;
@@ -376,8 +393,22 @@ export function useAutoHide({ pausedRef, paused }: Options): AutoHideHandle {
       console.log("[autoHide] focus changed:", focused);
       if (focused) {
         clearTimer();
-        if (stateRef.current === "hidden") show();
+        // 注意：不在这里展开贴边态。
+        // 收起状态下只有鼠标 hover 到 peek 条才应该展开（由 startPolling 处理），
+        // 单纯的 focus（如 Alt+Shift+P 全局快捷键唤起）不触发展开。
       } else {
+        // 拖动标题栏会让 webview 短暂失焦：1 秒内不要触发立即贴回，
+        // 否则用户拖到一半窗口就被吸到边缘了。
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dragAt: number = (window as any).__pinboardDragAt || 0;
+        const sinceDrag = Date.now() - dragAt;
+        if (sinceDrag < 1000) {
+          console.log(
+            `[autoHide] blur during drag (${sinceDrag}ms ago) - skip`,
+          );
+          return;
+        }
+
         // 如果当前 idle 是从贴边态展开的 → 失焦立即贴回，不走延时
         if (
           cameFromSnapRef.current &&

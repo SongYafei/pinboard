@@ -105,6 +105,15 @@ export default function App() {
     Promise.all([loadSettings(), loadItems()]);
   }, [loadItems, loadSettings]);
 
+  // 启动后或 downloadMaxKeep 变化时，按当前上限裁剪历史下载项
+  // （以前只在新下载完成时才裁，导致改设置/重启后存量不会被处理）
+  const trimDownloads = useItemStore((s) => s.trimDownloads);
+  const downloadMaxKeep = useSettingsStore((s) => s.downloadMaxKeep);
+  useEffect(() => {
+    if (!settingsLoaded || !loaded) return;
+    trimDownloads(downloadMaxKeep);
+  }, [settingsLoaded, loaded, downloadMaxKeep, trimDownloads]);
+
   // 窗口透明度
   useEffect(() => {
     if (!settingsLoaded) return;
@@ -264,8 +273,6 @@ export default function App() {
   });
 
   // 下载监听：新下载完成的文件 → 自动 addItem + Toast 通知
-  const trimDownloads = useItemStore((s) => s.trimDownloads);
-  const downloadMaxKeep = useSettingsStore((s) => s.downloadMaxKeep);
   useDownloadWatcher({
     onDownloadReady: async (payload) => {
       const { path, name } = payload;
